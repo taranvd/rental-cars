@@ -19,7 +19,7 @@ import {
   ModalDescFunc,
 } from './CarCard.styled';
 import { truncateFunctionality } from 'utils/truncateFunctionality';
-import { Modal, Button, Placeholder } from 'rsuite';
+import { Modal } from 'rsuite';
 
 const CarCard = ({ car }) => {
   const [active, setActive] = useState(false);
