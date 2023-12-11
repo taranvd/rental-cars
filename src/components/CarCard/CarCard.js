@@ -4,12 +4,22 @@ import { splitAddressProperties } from 'utils/splitAddressProperties';
 import {
   Desc,
   Image,
+  ModalButton,
   StyledButton,
   StyledHeart,
   Title,
+  Footer,
+  ModalImage,
+  StyledModal,
+  ModalDesc,
+  ModalDescr,
+  ModalSubtitle,
+  ModalTextElement,
+  ModalNumberElement,
+  ModalDescFunc,
 } from './CarCard.styled';
 import { truncateFunctionality } from 'utils/truncateFunctionality';
-import { Modal, Button, ButtonToolbar, Placeholder } from 'rsuite';
+import { Modal, Button, Placeholder } from 'rsuite';
 
 const CarCard = ({ car }) => {
   const [active, setActive] = useState(false);
@@ -28,8 +38,16 @@ const CarCard = ({ car }) => {
     id,
     rentalCompany,
     functionalities,
+    fuelConsumption,
+    engineSize,
+    description,
+    accessories,
+    rentalConditions,
+    mileage,
   } = car;
   const { city, country } = splitAddressProperties(address);
+  const conditions = rentalConditions.split('\n');
+  const minAge = conditions[0].split(':');
 
   return (
     <>
@@ -72,22 +90,84 @@ const CarCard = ({ car }) => {
         Learn more
       </StyledButton>
 
-      <Modal open={open} onClose={handleClose}>
-        <Modal.Header>
-          <Modal.Title>Modal Title</Modal.Title>
-        </Modal.Header>
+      <StyledModal open={open} onClose={handleClose} size={541}>
+        <Modal.Header></Modal.Header>
         <Modal.Body>
-          <Placeholder.Paragraph />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column',
+            }}
+          >
+            <ModalImage src={img} alt="" />
+          </div>
+          <Title>
+            {make} <span style={{ color: '#3470FF' }}>{model}</span>, {year}
+          </Title>
+          <ModalDesc>
+            {city} | {country} | {type} | id:{id} | Year: {year} | {''}
+            Type:{type}
+          </ModalDesc>
+          <ModalDesc>
+            Fuel Consumption:{fuelConsumption} | Engine Size:
+            {engineSize}
+          </ModalDesc>
+          <ModalDescr>{description}</ModalDescr>
+
+          <div style={{ marginBottom: '24px' }}>
+            <ModalSubtitle>Accessories and functionalities:</ModalSubtitle>
+            <ModalDescFunc>{functionalities.join(' | ')}</ModalDescFunc>
+            <ModalDescFunc>{accessories.join(' | ')}</ModalDescFunc>
+          </div>
+
+          <div>
+            <ModalSubtitle> Rental Conditions: </ModalSubtitle>
+            <div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  gap: '3px',
+                  marginBottom: '8px',
+                }}
+              >
+                <ModalTextElement>
+                  {minAge[0]}:{' '}
+                  <ModalNumberElement>{minAge[1]}</ModalNumberElement>
+                </ModalTextElement>
+
+                <ModalTextElement>{conditions[1]}</ModalTextElement>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  gap: '3px',
+                }}
+              >
+                <ModalTextElement>{conditions[2]}</ModalTextElement>
+                <ModalTextElement>
+                  Milleage:{' '}
+                  <ModalNumberElement>
+                    {mileage.toLocaleString('en-US')}
+                  </ModalNumberElement>
+                </ModalTextElement>
+                <ModalTextElement>
+                  Price:
+                  <ModalNumberElement>{rentalPrice}</ModalNumberElement>
+                </ModalTextElement>
+              </div>
+            </div>
+          </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={handleClose} appearance="primary">
-            Ok
-          </Button>
-          <Button onClick={handleClose} appearance="subtle">
-            Cancel
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        <Footer>
+          <ModalButton onClick={handleClose} appearance="primary">
+            Rental Car
+          </ModalButton>
+        </Footer>
+      </StyledModal>
     </>
   );
 };
