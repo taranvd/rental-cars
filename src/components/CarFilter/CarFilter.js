@@ -6,7 +6,7 @@ import {
   FormStyled,
   StyledButton,
 } from './CarFilter.styled';
-import { resetFilter, setFilter } from '../../redux/carFilterSlice';
+import { setFilter } from '../../redux/carFilterSlice';
 import makes from '../../data/makes.json';
 import { Dropdown } from 'rsuite';
 
