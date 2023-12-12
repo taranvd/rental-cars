@@ -16,7 +16,7 @@ const filterBrand = makes.map(make => ({
   brand: make,
 }));
 
-const priceOptions = Array.from({ length: 10 }, (_, index) => (index + 1) * 10);
+const priceOptions = Array.from({ length: 10 }, (_, index) => (index + 1) * 20);
 
 const CarFilter = () => {
   const [carBrand, setCarBrand] = useState('');
