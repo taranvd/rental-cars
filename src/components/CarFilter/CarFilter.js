@@ -1,21 +1,30 @@
 import { useState } from 'react';
+import InputMileage from 'components/InputMileage/InputMileage';
 import {
   DropdownLabel,
   DropdownStyled,
   FormStyled,
   StyledButton,
 } from './CarFilter.styled';
+import { resetFilter, setFilter } from '../../redux/carFilterSlice';
+import makes from '../../data/makes.json';
 import { Dropdown } from 'rsuite';
-import 'rsuite/dist/rsuite.min.css';
 
-import InputMileage from 'components/InputMileage/InputMileage';
+import 'rsuite/dist/rsuite.min.css';
+import { useDispatch } from 'react-redux';
+const filterBrand = makes.map(make => ({
+  brand: make,
+}));
+
+const priceOptions = Array.from({ length: 10 }, (_, index) => (index + 1) * 10);
 
 const CarFilter = () => {
   const [carBrand, setCarBrand] = useState('');
   const [price, setPrice] = useState('');
-  const [mileage, setMileage] = useState({ from: null, to: null });
+  const [mileage, setMileage] = useState({ from: 0, to: 0 });
   const [dropdownFromTitle, setDropdownFromTitle] = useState('Enter the text');
   const [dropdownToTitle, setDropdownToTitle] = useState('To $');
+  const dispatch = useDispatch();
 
   const handleCarBrandChange = value => {
     setCarBrand(value);
@@ -34,13 +43,13 @@ const CarFilter = () => {
   const handleSubmit = event => {
     event.preventDefault();
 
-    const formData = {
+    const filters = {
       carBrand,
       price,
       mileage,
     };
 
-    console.log(formData); // або відправте дані на сервер, викличте функцію тощо.
+    dispatch(setFilter(filters));
   };
 
   return (
@@ -52,21 +61,13 @@ const CarFilter = () => {
             title={dropdownFromTitle}
             size="lg"
             onSelect={handleCarBrandChange}
-            activeKey={carBrand}
+            activeKey={filterBrand}
           >
-            <Dropdown.Item eventKey="New File">New File</Dropdown.Item>
-            <Dropdown.Item eventKey="Download As...">
-              Download As...
-            </Dropdown.Item>
-            <Dropdown.Item eventKey="Export PDF">Export PDF</Dropdown.Item>
-            <Dropdown.Item eventKey="Export HTML">Export HTML</Dropdown.Item>
-            <Dropdown.Item eventKey="Settings">Settings</Dropdown.Item>
-            <Dropdown.Item eventKey="About">About</Dropdown.Item>
-            <Dropdown.Item eventKey="About">About</Dropdown.Item>
-            <Dropdown.Item eventKey="About">About</Dropdown.Item>
-            <Dropdown.Item eventKey="About">About</Dropdown.Item>
-            <Dropdown.Item eventKey="About">About</Dropdown.Item>
-            <Dropdown.Item eventKey="About">About</Dropdown.Item>
+            {filterBrand.map((make, index) => (
+              <Dropdown.Item key={index} eventKey={make.brand}>
+                {make.brand}
+              </Dropdown.Item>
+            ))}
           </DropdownStyled>
         </div>
 
@@ -76,15 +77,13 @@ const CarFilter = () => {
             title={dropdownToTitle}
             size="lg"
             onSelect={handlePriceChange}
+            activeKey={priceOptions}
           >
-            <Dropdown.Item eventKey="New File">New File</Dropdown.Item>
-            <Dropdown.Item eventKey="Download As...">
-              Download As...
-            </Dropdown.Item>
-            <Dropdown.Item eventKey="Export PDF">Export PDF</Dropdown.Item>
-            <Dropdown.Item eventKey="Export HTML">Export HTML</Dropdown.Item>
-            <Dropdown.Item eventKey="Settings">Settings</Dropdown.Item>
-            <Dropdown.Item eventKey="About">About</Dropdown.Item>
+            {priceOptions.map((option, index) => (
+              <Dropdown.Item key={index} eventKey={option}>
+                {`$${option}`}
+              </Dropdown.Item>
+            ))}
           </DropdownStyled>
         </div>
 

@@ -20,12 +20,18 @@ import {
 } from './CarCard.styled';
 import { truncateFunctionality } from 'utils/truncateFunctionality';
 import { Modal } from 'rsuite';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToFavorites } from '../../redux/favoriteSlice';
 
-const CarCard = ({ car }) => {
+const CarCard = ({ car, onRemoveFromFavorites }) => {
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const dispatch = useDispatch();
+  const favorites = useSelector(state => state.favorites);
+
+  const isFavorite = favorites.some(favoriteCar => favoriteCar.id === car.id);
 
   const {
     img,
@@ -59,7 +65,14 @@ const CarCard = ({ car }) => {
           activeColor="rgba(52, 112, 255, 1)"
           inactiveColor="#fff"
           strokeWidth={60}
-          onClick={() => setActive(!active)}
+          onClick={() => {
+            setActive(!active);
+            if (!isFavorite) {
+              dispatch(addToFavorites(car));
+            } else {
+              onRemoveFromFavorites();
+            }
+          }}
         />
         <Image
           src={img}
@@ -90,7 +103,7 @@ const CarCard = ({ car }) => {
         Learn more
       </StyledButton>
 
-      <StyledModal open={open} onClose={handleClose} size={541}>
+      <StyledModal open={open} onClose={handleClose} size={551}>
         <Modal.Header></Modal.Header>
         <Modal.Body>
           <div

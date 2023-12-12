@@ -11,6 +11,24 @@ const CarList = () => {
   const catalog = useSelector(getAdverts);
   const itemsPerPage = 12;
   const [loadedItems, setLoadedItems] = useState(itemsPerPage);
+  const filter = useSelector(state => state.carFilter.filters);
+
+  const filteredCatalog = catalog.filter(car => {
+    if (!filter) return true;
+
+    if (filter.carBrand && car.make !== filter.carBrand) {
+      return false;
+    }
+
+    if (filter.price) {
+      const carPrice = parseInt(car.rentalPrice.replace('$', ''), 10);
+      if (carPrice > filter.price) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 
   useEffect(() => {
     dispatch(fetchAdvert({ limit: loadedItems }));
@@ -23,14 +41,14 @@ const CarList = () => {
   return (
     <div>
       <List>
-        {catalog.slice(0, loadedItems).map((car, index) => (
+        {filteredCatalog.slice(0, loadedItems).map((car, index) => (
           <li key={`${car.id}=${index}`}>
             <CarCard car={car} />
           </li>
         ))}
       </List>
 
-      {loadedItems < catalog.length && (
+      {loadedItems < filteredCatalog.length && (
         <div style={{ display: 'flex', marginBottom: '50px' }}>
           <LoadButton onClick={handleLoadMore}>Load More</LoadButton>
         </div>
